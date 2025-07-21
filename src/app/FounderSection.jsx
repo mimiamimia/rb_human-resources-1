@@ -1,17 +1,24 @@
 import React from 'react';
+import Image from 'next/image'
 
 const FounderSection = () => {
     return (
-        <section className="py-16 bg-white">
+        <section id = 'foundersection'className="py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                     <div className="flex flex-col items-center lg:items-start space-y-6">
                         <h2 className="text-3xl font-bold text-indigo-950 pb-8">Fundadora</h2>
-                        
+                            <Image
+                                src="/elizabeth_gomes.jpg"
+                                alt="Fundadora da empresa"
+                                className='rounded-2xl'
+                                width={1000}
+                                height={1000}
+                            />
                     </div>
-                    <div className="space-y-4">
+                    <div className="mt-32">
                         <h3 className="text-2xl font-bold text-indigo-950">Elizabeth Gomes</h3>
-                        <p className="text-lg text-indigo-950 font-medium py-4">CEO</p>
+                        <p className="text-lg text-indigo-950 font-medium py-2">CEO</p>
                         <div className="prose prose-gray max-w-none">
                             <p className="text-gray-700 leading-relaxed text-justify">
                                 Sou profissional de Recursos Humanos, com sólida experiência como Consultora e Analista de RH, atuando em projetos estratégicos voltados para a gestão de pessoas. Minha trajetória é marcada por uma atuação abrangente em Recrutamento e Seleção, Treinamento e Desenvolvimento, Avaliação de Desempenho, Clima Organizacional e Suporte a Lideranças.<br/> <br/>

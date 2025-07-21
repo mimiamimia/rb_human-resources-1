@@ -5,6 +5,7 @@ import HeroSection from './HeroSection';
 import RegistrationSection from './RegistrationSection';
 import DescriptionSection from './DescriptionSection';
 import Footer from './Footer';
+import Candidate from './Candidate';
 
 export default function Home() {
   return (
@@ -12,9 +13,10 @@ export default function Home() {
     <div>
       <Header />
       <HeroSection />
+      <DescriptionSection />
       <FounderSection />
       <RegistrationSection />
-      <DescriptionSection />
+      <Candidate />
       <Footer />
     </div>
   );

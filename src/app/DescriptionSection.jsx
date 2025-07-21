@@ -10,7 +10,7 @@ const DescriptionCard = ({ image, title, description }) => {
                 className="w-full h-auto object-cover"
             />
             <div className="p-6">
-                <h3 className="text-xl font-semibold text-indigo-900 mb-3">{title}</h3>
+                <h3 className="text-xl text-center font-semibold text-indigo-900 mb-3">{title}</h3>
                 <p className="text-gray-600 leading-relaxed">{description}</p>
             </div>
         </div>
@@ -33,7 +33,7 @@ const DescriptionSection = () => {
     ];
 
     return (
-        <section className="py-16 bg-gray-50">
+        <section id = 'descriptionsection' className="py-16 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 className="text-3xl font-bold text-center  text-indigo-950 pb-8">Descrição</h2>
                 
