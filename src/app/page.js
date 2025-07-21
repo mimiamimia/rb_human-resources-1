@@ -1,8 +1,8 @@
-import FounderSection from './FounderSection';
 import './globals.css'
+import FounderSection from './FounderSection';
 import Header from "./Header";
 import HeroSection from './HeroSection';
-import RegistrationSection from './RegistrationSection';
+import Enterprise from './Enterprise';
 import DescriptionSection from './DescriptionSection';
 import Footer from './Footer';
 import Candidate from './Candidate';
@@ -15,7 +15,7 @@ export default function Home() {
       <HeroSection />
       <DescriptionSection />
       <FounderSection />
-      <RegistrationSection />
+      <Enterprise />
       <Candidate />
       <Footer />
     </div>

@@ -30,12 +30,12 @@ const Header = () => {
                             </a>
                         </li>
                         <li>
-                            <a href="#registrationsection" className="text-gray-700 hover:text-gray-900 font-medium">
+                            <a href="#enterprise" className="text-blue-700 hover:text-blue-900 font-medium">
                                 Sou uma empresa
                             </a>
                         </li>
                         <li>
-                            <a href="#registrationsection" className="text-gray-700 hover:text-gray-900 font-medium">
+                            <a href="#candidate" className="text-yellow-600 hover:text-yellow-700 font-medium">
                                 Sou um candidato
                             </a>
                         </li>

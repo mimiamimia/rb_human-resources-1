@@ -1,7 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-import { User, Mail, Phone, FileText, Upload, Check, Send, MapPin, Award } from 'lucide-react';
-const CandidatoRegistrationForm = () => {
+import { User, Mail, Phone, FileText, Upload, Check, Send, Users } from 'lucide-react';
+
+const CandidatoFormComponent = () => {
+    const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
@@ -57,13 +59,13 @@ const CandidatoRegistrationForm = () => {
 
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
-        if (file && file.size <= 5 * 1024 * 1024) { // 5MB limit
+        if (file && file.size <= 10 * 1024 * 1024) { // 10MB limit
             setFormData(prev => ({
                 ...prev,
                 curriculo: file
             }));
         } else if (file) {
-            alert('Arquivo muito grande. O tamanho máximo é 5MB.');
+            alert('Arquivo muito grande. O tamanho máximo é 10MB.');
         }
     };
 
@@ -76,14 +78,56 @@ const CandidatoRegistrationForm = () => {
             formData.aceiteTermos;
     };
 
+    if (!showForm) {
+        return (
+            <section id='candidate' className='py-16 text-left bg-white'>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div className="space-y-8">
+                            <h2 className="text-3xl font-bold text-indigo-950">Área do candidato</h2>
+                            <div className="bg-white p-6">
+                                <h3 className="text-xl font-semibold text-indigo-950 mb-2">Profissional</h3>
+                                <p className="text-gray-600 mb-8">
+                                    Crie seu perfil como profissional e encontre as melhores oportunidades de carreira.
+                                </p>
+                                <button
+                                    onClick={() => setShowForm(true)}
+                                    className="flex py-2 px-4 w-70 items-center gap-3 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold  rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                                >
+                                    <User size={24} />
+                                    Cadastrar como Candidato
+                                </button>
+                            </div>
+                        </div>
+                        <div className="flex justify-center">
+                            <img
+                                src="https://paraempresas.catho.com.br/wp-content/uploads/2020/09/perfil-do-candidato-1020x532.jpg"
+                                alt="Profissionais trabalhando"
+                                className="rounded-lg shadow-xl max-w-full h-auto"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section >
+        );
+    }
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl mx-auto">
-
-
+                {/* Botão de voltar */}
+                <button
+                    onClick={() => setShowForm(false)}
+                    className="flex items-center gap-2 text-gray-600 hover:text-yellow-600 mb-8 transition-colors"
+                >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Voltar
+                </button>
                 {/* Success Message */}
                 {submitted && (
-                    <div className="mb-8 bg-green-50 border border-green-200 rounded-xl p-6 flex items-center gap-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex-shrink-0">
                             <Check className="text-green-600 bg-green-100 rounded-full p-1" size={24} />
                         </div>
@@ -95,27 +139,26 @@ const CandidatoRegistrationForm = () => {
                 )}
 
                 {/* Form Card */}
-                <label className='peer'>
-                    <button type='submit' className=' bg-yellow-600 text-white px-6 py-2 rounded-md hover:bg-yellow-700 font-medium'>Sou candidato</button>
-                </label>
-                {/* Header */}
-                <div className="hidden peer-has-clicked:flex text-center mb-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-100 rounded-full mb-6">
-                        <User className="text-purple-600" size={40} />
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center">
+                        <div className="inline-flex items-center justify-center w-24 h-24 bg-yellow-100 rounded-full mb-8">
+                            <Users className="text-yellow-600" size={48} />
+                        </div>
+                        <h1 className="text-3xl font-bold text-gray-900 mb-6">
+                            Cadastre-se como Candidato
+                        </h1>
+                        <p className="text-1xl text-gray-600 max-w-2xl mx-auto mb-8">
+                            Tenha acesso às melhores oportunidades de trabalho.
+                            Conecte-se com empresas de destaque e impulsione sua carreira profissional.
+                        </p>
                     </div>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                        Cadastro de Candidato
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-xl mx-auto">
-                        Cadastre-se em nossa plataforma e tenha acesso às melhores oportunidades de trabalho
-                    </p>
                 </div>
-                <div className="hidden transition-all transition-discrete not-peer-has-checked:opacity-0 peer-has-checked:block bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
                     <div className="space-y-6">
                         {/* Dados Pessoais */}
                         <div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                <User size={20} className="text-purple-600" />
+                                <User size={20} className="text-yellow-600" />
                                 Dados Pessoais
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -162,7 +205,6 @@ const CandidatoRegistrationForm = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-3">
-                                        <MapPin className="inline mr-2" size={16} />
                                         Cidade
                                     </label>
                                     <input
@@ -179,7 +221,7 @@ const CandidatoRegistrationForm = () => {
                         {/* Informações Profissionais */}
                         <div className="pt-6 border-t border-gray-100">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                <Award size={20} className="text-purple-600" />
+                                <FileText size={20} className="text-yellow-600" />
                                 Informações Profissionais
                             </h3>
 
@@ -191,7 +233,7 @@ const CandidatoRegistrationForm = () => {
                                     <select
                                         value={formData.areaInteresse}
                                         onChange={(e) => handleInputChange('areaInteresse', e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200"
                                     >
                                         <option value="">Selecione uma área</option>
                                         <option value="tecnologia">Tecnologia</option>
@@ -213,16 +255,15 @@ const CandidatoRegistrationForm = () => {
                                     <select
                                         value={formData.nivelExperiencia}
                                         onChange={(e) => handleInputChange('nivelExperiencia', e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200"
                                     >
                                         <option value="">Selecione o nível</option>
+                                        <option value="zero">Não possuo experiência</option>
+                                        <option value="jovem-aprendiz">Jovem aprendiz</option>
                                         <option value="estagiario">Estagiário</option>
-                                        <option value="junior">Júnior (0-2 anos)</option>
-                                        <option value="pleno">Pleno (3-5 anos)</option>
-                                        <option value="senior">Sênior (6+ anos)</option>
-                                        <option value="coordenador">Coordenador/Líder</option>
-                                        <option value="gerente">Gerente</option>
-                                        <option value="diretor">Diretor</option>
+                                        <option value="junior">0-2 anos</option>
+                                        <option value="pleno">3-5 anos</option>
+                                        <option value="senior">6+ anos</option>
                                     </select>
                                 </div>
                             </div>
@@ -235,7 +276,7 @@ const CandidatoRegistrationForm = () => {
                                     type="url"
                                     value={formData.linkedin}
                                     onChange={(e) => handleInputChange('linkedin', e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200"
                                     placeholder="https://linkedin.com/in/seuperfil"
                                 />
                             </div>
@@ -248,7 +289,7 @@ const CandidatoRegistrationForm = () => {
                                     rows={4}
                                     value={formData.experiencia}
                                     onChange={(e) => handleInputChange('experiencia', e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 resize-none"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-200 resize-none"
                                     placeholder="Descreva brevemente sua experiência profissional, principais conquistas e habilidades..."
                                 />
                             </div>
@@ -257,13 +298,13 @@ const CandidatoRegistrationForm = () => {
                         {/* Upload de Currículo */}
                         <div className="pt-6 border-t border-gray-100">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                <FileText size={20} className="text-purple-600" />
+                                <FileText size={20} className="text-yellow-600" />
                                 Currículo *
                             </h3>
 
                             <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${formData.curriculo
-                                ? 'border-purple-400 bg-purple-50'
-                                : 'border-gray-300 hover:border-purple-400 hover:bg-purple-50'
+                                ? 'border-yellow-400 bg-yellow-50'
+                                : 'border-gray-300 hover:border-yellow-400 hover:bg-yellow-50'
                                 }`}>
                                 <input
                                     type="file"
@@ -278,11 +319,11 @@ const CandidatoRegistrationForm = () => {
                                 >
                                     {formData.curriculo ? (
                                         <>
-                                            <Check className="text-purple-600 mb-3" size={48} />
-                                            <p className="text-purple-700 font-semibold mb-1">
+                                            <Check className="text-yellow-600 mb-3" size={48} />
+                                            <p className="text-yellow-700 font-semibold mb-1">
                                                 {formData.curriculo.name}
                                             </p>
-                                            <p className="text-sm text-purple-600">
+                                            <p className="text-sm text-yellow-600">
                                                 Arquivo carregado com sucesso! Clique para alterar.
                                             </p>
                                         </>
@@ -298,7 +339,7 @@ const CandidatoRegistrationForm = () => {
                                         </>
                                     )}
                                     <p className="text-xs text-gray-500 mt-2">
-                                        Formatos aceitos: PDF, DOC, DOCX (máx. 5MB)
+                                        Formatos aceitos: PDF, DOC, DOCX (máx. 10MB)
                                     </p>
                                 </label>
                             </div>
@@ -315,8 +356,7 @@ const CandidatoRegistrationForm = () => {
                                     className="mt-1 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                                 />
                                 <label htmlFor="aceiteTermos" className="text-sm text-gray-600">
-                                    Eu concordo com os <a href="#" className="text-purple-600 underline">termos de uso</a> e
-                                    <a href="#" className="text-purple-600 underline"> política de privacidade</a>.
+                                    Eu concordo com os termos de uso e política de privacidade.
                                     Autorizo o uso dos meus dados para fins de recrutamento e seleção.
                                 </label>
                             </div>
@@ -325,7 +365,7 @@ const CandidatoRegistrationForm = () => {
                                 onClick={handleSubmit}
                                 disabled={!isFormValid() || loading}
                                 className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-3 ${isFormValid() && !loading
-                                    ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
+                                    ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105'
                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                     }`}
                             >
@@ -349,4 +389,4 @@ const CandidatoRegistrationForm = () => {
     );
 };
 
-export default CandidatoRegistrationForm;
+export default CandidatoFormComponent;
