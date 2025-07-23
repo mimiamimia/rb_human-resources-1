@@ -1,3 +1,5 @@
+import StorageInitializer from './StorageInitializer';
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -8,7 +10,9 @@ export default function RootLayout({ children }) {
         <title>RB Recursos Humanos</title>
     </head>
       <body>   
-        {children}
+        <StorageInitializer>
+          {children}
+        </StorageInitializer>
       </body>
     </html>
   );

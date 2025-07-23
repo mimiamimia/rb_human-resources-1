@@ -25,11 +25,6 @@ const Header = () => {
                             </a>
                         </li>
                         <li>
-                            <a href="#foundersection" className="text-gray-700 hover:text-gray-900 font-medium">
-                                Fundadora
-                            </a>
-                        </li>
-                        <li>
                             <a href="#enterprise" className="text-blue-700 hover:text-blue-900 font-medium">
                                 Sou uma empresa
                             </a>
