@@ -75,9 +75,9 @@ const StorageInitializer = ({ children }) => {
         try {
             console.log('🔧 Tentando criar bucket "curriculos"...');
             
-            const result = await createBucketIfNotExists('curriculos');
+            //const result = await createBucketIfNotExists('curriculos');
             
-            if (result.success) {
+            /* if (result.success) {
                 console.log('✅ Bucket criado com sucesso!');
                 setStorageStatus({
                     initialized: true,
@@ -88,10 +88,11 @@ const StorageInitializer = ({ children }) => {
                 });
                 
                 // Recarregar informações do bucket
-                await checkStorageStatus();
+                await checkStorageStatus(); 
+                
             } else {
                 throw new Error(result.error?.message || 'Erro desconhecido ao criar bucket');
-            }
+            }*/
 
         } catch (error) {
             console.error('❌ Erro ao criar bucket:', error);

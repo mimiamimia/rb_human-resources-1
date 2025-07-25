@@ -75,44 +75,65 @@ export const createBucketIfNotExists = async (bucketName = BUCKET_CONFIG.name) =
 }
 
 // Função para verificar se o bucket existe
+// Versão melhorada da função ensureBucketExists
 export const ensureBucketExists = async (bucketName = BUCKET_CONFIG.name) => {
     try {
-        console.log(`Verificando bucket '${bucketName}'...`)
+        console.log(`Verificando bucket '${bucketName}'...`);
         
-        const { data: buckets, error } = await supabase.storage.listBuckets()
-        
-        if (error) {
-            console.error('Erro ao listar buckets:', error)
-            return false
+        // Primeiro, tentar fazer uma operação simples no bucket para verificar se existe
+        const { data: testList, error: testError } = await supabase.storage
+            .from(bucketName)
+            .list('', { limit: 1 });
+
+        // Se não houve erro, o bucket existe
+        if (!testError) {
+            console.log(`Bucket '${bucketName}' existe e está acessível`);
+            return true;
         }
 
-        const bucketExists = buckets.some(bucket => bucket.name === bucketName)
-        
-        if (!bucketExists) {
-            console.warn(`Bucket '${bucketName}' não encontrado.`)
-            console.log('Buckets disponíveis:', buckets.map(b => b.name))
+        // Se o erro indica que o bucket não existe, tentar listar todos os buckets
+        if (testError.message.includes('not found') || testError.message.includes('does not exist')) {
+            console.log('Bucket não encontrado, listando buckets disponíveis...');
             
-            // Tentar criar o bucket automaticamente
-            console.log('Tentando criar bucket automaticamente...')
-            const createResult = await createBucketIfNotExists(bucketName)
+            const { data: buckets, error: listError } = await supabase.storage.listBuckets();
             
-            if (createResult.success) {
-                console.log('Bucket criado automaticamente com sucesso!')
-                return true
-            } else {
-                console.error('Falha ao criar bucket automaticamente:', createResult.error)
-                return false
+            if (listError) {
+                console.error('Erro ao listar buckets:', listError);
+                return false;
             }
+
+            console.log('Buckets disponíveis:', buckets.map(b => b.name));
+            
+            const bucketExists = buckets.some(bucket => bucket.name === bucketName);
+            
+            if (!bucketExists) {
+                console.warn(`Bucket '${bucketName}' não encontrado na lista.`);
+                
+                // Tentar criar o bucket automaticamente
+                console.log('Tentando criar bucket automaticamente...');
+                const createResult = await createBucketIfNotExists(bucketName);
+                
+                if (createResult.success) {
+                    console.log('Bucket criado automaticamente com sucesso!');
+                    return true;
+                } else {
+                    console.error('Falha ao criar bucket automaticamente:', createResult.error);
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        console.log(`Bucket '${bucketName}' existe e está disponível`)
-        return true
+        // Outros tipos de erro
+        console.error('Erro inesperado ao verificar bucket:', testError);
+        return false;
         
     } catch (error) {
-        console.error('Erro ao verificar bucket:', error)
-        return false
+        console.error('Erro ao verificar bucket:', error);
+        return false;
     }
-}
+};
 
 // Função melhorada para upload de arquivos
 export const uploadFile = async (file, bucket = BUCKET_CONFIG.name, path) => {

@@ -26,7 +26,7 @@ const Enterprise = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div className="flex justify-center">
                         <img
-                            src="https://paraempresas.catho.com.br/wp-content/uploads/2020/09/perfil-do-candidato-1020x532.jpg"
+                            src="https://ec.europa.eu/eurostat/documents/4187653/15725031/Stockbym_AdobeStock_593476711_RV.jpg"
                             alt="Profissionais trabalhando"
                             className="rounded-lg shadow-xl max-w-full h-auto"
                         />

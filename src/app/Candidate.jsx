@@ -3,6 +3,14 @@ import React, { useState } from 'react';
 import { User, Mail, Phone, FileText, Upload, Check, Send, Users, AlertCircle } from 'lucide-react';
 import { supabase, candidateService, uploadFile, getPublicUrl, ensureBucketExists } from '../lib/supabase';
 
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result.replace(/^data:.+?;base64,/, ''));
+    reader.onerror = reject;
+});
+
+
 const CandidatoFormComponent = () => {
     const [showForm, setShowForm] = useState(false);
     const [formData, setFormData] = useState({
@@ -21,70 +29,24 @@ const CandidatoFormComponent = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // CORREÇÃO SIMPLES - apenas mudando o catch
     const handleSubmit = async () => {
         setLoading(true);
         setError('');
 
         try {
-            // Verificar se o bucket de currículos existe
-            const bucketExists = await ensureBucketExists('curriculos');
-            if (!bucketExists) {
-                throw new Error('Bucket de currículos não encontrado. Entre em contato com o suporte.');
-            }
+            formData.fileName = formData.email.replace('@', '_') + '.' + Date.now() + '.' + formData.curriculo.name.split('.').at(-1);
+            formData.fileType = formData.curriculo.type;
+            formData.curriculo = await toBase64(formData.curriculo);
+            await fetch('/api/candidates', {
+                method: 'POST',
+                headers: {
+                    //'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
 
-            let curriculoUrl = null;
-
-            // Se há um currículo, fazer upload
-            if (formData.curriculo) {
-                // Gerar nome único para o arquivo
-                const fileExtension = formData.curriculo.name.split('.').pop();
-                const fileName = `${Date.now()}-${formData.nome.replace(/\s+/g, '-').toLowerCase()}.${fileExtension}`;
-
-                console.log('Fazendo upload do currículo:', fileName);
-
-                // Upload do arquivo
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('curriculos')
-                    .upload(fileName, formData.curriculo);
-
-                if (uploadError) {
-                    throw new Error(`Erro no upload: ${uploadError.message}`);
-                }
-
-                if (uploadResult) {
-                    // Obter URL pública do arquivo
-                    curriculoUrl = getPublicUrl('curriculos', fileName);
-                    console.log('URL do currículo:', curriculoUrl);
-                }
-            }
-
-            // Preparar dados do candidato para o banco
-            const candidateData = {
-                nome: formData.nome,
-                email: formData.email,
-                telefone: formData.telefone,
-                cidade: formData.cidade || null,
-                area_interesse: formData.areaInteresse, // Note o underscore
-                nivel_experiencia: formData.nivelExperiencia, // Note o underscore
-                experiencia: formData.experiencia || null,
-                curriculo_url: curriculoUrl, // Note o underscore
-                linkedin: formData.linkedin || null,
-                status: 'ativo'
-            };
-
-            console.log('Salvando candidato com dados:', candidateData);
-
-            // Salvar candidato no banco
-            const result = await candidateService.create(candidateData);
-
-            if (result.error) {
-                throw new Error(result.error.message || 'Erro ao salvar candidato');
-            }
-
-            console.log('Candidato salvo com sucesso:', result.data);
             setSubmitted(true);
-
-            // Reset form after success
             setTimeout(() => {
                 setSubmitted(false);
                 setFormData({
@@ -99,13 +61,16 @@ const CandidatoFormComponent = () => {
                     linkedin: '',
                     aceiteTermos: false
                 });
-                setShowForm(false); // Voltar para a tela inicial
+            }, 2000);
+            setTimeout(() => {
+                setShowForm(false);
             }, 4000);
 
         } catch (error) {
-            console.error('Erro no cadastro:', error);
-            setError(error.message || 'Erro ao realizar cadastro. Tente novamente.');
+            console.error('❌ Erro ao enviar formulário:', error);
+            setError(error.message);
         } finally {
+            console.log('--- FIM handleSubmit ---');
             setLoading(false);
         }
     };
@@ -200,27 +165,7 @@ const CandidatoFormComponent = () => {
                     Voltar
                 </button>
 
-                {/* Error Message */}
-                {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-                        <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
-                        <div>
-                            <h3 className="text-red-800 font-semibold">Erro no cadastro</h3>
-                            <p className="text-red-700">{error}</p>
-                        </div>
-                    </div>
-                )}
 
-                {/* Success Message */}
-                {submitted && (
-                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-                        <Check className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
-                        <div>
-                            <h3 className="text-green-800 font-semibold">Cadastro realizado com sucesso!</h3>
-                            <p className="text-green-700">Você será notificado sobre vagas compatíveis com seu perfil.</p>
-                        </div>
-                    </div>
-                )}
 
                 {/* Form Header */}
                 <div className="text-center mb-8">
@@ -455,6 +400,28 @@ const CandidatoFormComponent = () => {
                                 </label>
                             </div>
 
+                            {/* Error Message */}
+                            {error && (
+                                <div className="my-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                                    <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                                    <div>
+                                        <h3 className="text-red-800 font-semibold">Erro no cadastro</h3>
+                                        <p className="text-red-700">{error}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Success Message */}
+                            {submitted && (
+                                <div className="my-6 p-4 bg-lime-500 border border-lime-700 rounded-lg flex items-center gap-3">
+                                    <Check className="text-lime-800 flex-shrink-0 mt-0.5" size={20} />
+                                    <div>
+                                        <h3 className="text-lime-900 font-semibold">Cadastro realizado com sucesso!</h3>
+                                        <p className="text-lime-800">Você será notificado sobre vagas compatíveis com seu perfil.</p>
+                                    </div>
+                                </div>
+                            )}
+
                             <button
                                 onClick={handleSubmit}
                                 disabled={!isFormValid() || loading}
@@ -475,12 +442,14 @@ const CandidatoFormComponent = () => {
                                     </>
                                 )}
                             </button>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     );
+
 };
 
 export default CandidatoFormComponent;
