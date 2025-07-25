@@ -36,7 +36,7 @@ const Enterprise = () => {
                         <div className="bg-white p-6">
                             <h3 className="text-xl font-semibold text-indigo-950 mb-2">Empresas</h3>
                             <p className="text-gray-600 mb-8">
-                                Crie seu perfil como profissional e encontre as melhores oportunidades de carreira.
+                                Entre em contato e mude o futuro do seu negócio.
                             </p>
                             
                             {!showContactOptions ? (
