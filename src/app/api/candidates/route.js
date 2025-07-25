@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase-server";
 import { decode } from "base64-arraybuffer";
 import { NextResponse } from "next/server";
 
-export const POST = async (req, res) => {
+export const POST = async (req) => {
   const body = await req.json();
 
   const {
